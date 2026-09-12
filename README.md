@@ -12,6 +12,8 @@ Next.js 16 App Router + TypeScript + Prisma 6 + PostgreSQL + Vitest + Playwright
 
 本项目需要 Node.js 服务端和 PostgreSQL；不能部署为 GitHub Pages 静态站点。推荐将 GitHub 仓库导入 Vercel，并使用 Neon、Supabase 或 Vercel Postgres 提供生产 PostgreSQL。
 
+**线上演示：<https://arkon-kappa.vercel.app/>**
+
 1. 在 Vercel 导入 `TianyiFan1/Arkon`，Framework 选择 Next.js。
 2. 在项目 **Settings → Environment Variables** 添加 `DATABASE_URL`，值为生产 PostgreSQL 的连接字符串；不要使用 `NEXT_PUBLIC_` 前缀。
 3. 点击 Deploy。仓库中的 `vercel.json` 会依次执行生产迁移、创建幂等的演示数据、生成 Prisma Client 和 Next.js 构建。
@@ -29,7 +31,7 @@ Next.js 16 App Router + TypeScript + Prisma 6 + PostgreSQL + Vitest + Playwright
 将 `BASE` 替换为实际 Vercel URL。下面命令先读取未支付数据、调用模拟支付、再读取完整数据。调用会改变该会话的状态；如需重复演示，请新建会话并按下方 API 流程保存和计算后再调用 `/pay`。
 
 ```sh
-BASE="https://YOUR-DEPLOYMENT.vercel.app"
+BASE="https://arkon-kappa.vercel.app"
 SID="99999999-8888-4777-8666-555555555555"
 
 curl "$BASE/api/quiz/results?sessionId=$SID"
