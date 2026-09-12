@@ -111,6 +111,7 @@ p {
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow-x: clip;
 }
 
 /* The scene is decorative. Keep every application surface above it. */
@@ -1441,7 +1442,6 @@ body {
 .main-content {
   max-width: 1000px;
   padding: 54px 32px 88px;
-  overflow-x: clip;
 }
 .assessment-stage {
   position: relative;
