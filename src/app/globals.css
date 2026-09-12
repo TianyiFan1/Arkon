@@ -1687,6 +1687,7 @@ body {
   .stage-intro { padding-bottom: 32px; }
   .stage-intro h1 { font-size: 42px; }
   .stage-intro p { font-size: 16px; }
+  .assessment-stage::before { inset-inline: 0; }
   .assessment-stage .answer-surface { padding: 30px 0 0; }
   .answer-surface .choices { grid-template-columns: 1fr; }
   .answer-surface .choice { min-height: 116px; flex-direction: row; justify-content: flex-start; gap: 16px; padding: 18px 46px 18px 18px; }
