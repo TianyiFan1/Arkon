@@ -1,5 +1,3 @@
-[![Quality checks](https://github.com/TianyiFan1/Arkon/actions/workflows/ci.yml/badge.svg)](https://github.com/TianyiFan1/Arkon/actions/workflows/ci.yml)
-
 # 睿迄科技健康测评挑战
 
 Next.js 16 App Router + TypeScript + Prisma 6 + PostgreSQL + Vitest + Playwright。
@@ -9,6 +7,37 @@ Next.js 16 App Router + TypeScript + Prisma 6 + PostgreSQL + Vitest + Playwright
 本仓库包含实现、迁移、测试、API 示例和 AI 协作记录。公网部署地址、GitHub 仓库地址和 GitHub Actions 通过链接**尚未核实**，不将占位 URL 或静态徽章作为交付证据。正式提交前需补齐实际地址并在线验证完整流程。
 
 ## 启动
+
+## 线上演示部署（Vercel + PostgreSQL）
+
+本项目需要 Node.js 服务端和 PostgreSQL；不能部署为 GitHub Pages 静态站点。推荐将 GitHub 仓库导入 Vercel，并使用 Neon、Supabase 或 Vercel Postgres 提供生产 PostgreSQL。
+
+1. 在 Vercel 导入 `TianyiFan1/Arkon`，Framework 选择 Next.js。
+2. 在项目 **Settings → Environment Variables** 添加 `DATABASE_URL`，值为生产 PostgreSQL 的连接字符串；不要使用 `NEXT_PUBLIC_` 前缀。
+3. 点击 Deploy。仓库中的 `vercel.json` 会依次执行生产迁移、创建幂等的演示数据、生成 Prisma Client 和 Next.js 构建。
+4. 部署完成后，将 Vercel 提供的 `https://…vercel.app` 地址填写到本节顶部和作业提交处，并用该地址从首步走到结果页验证一次。
+
+生产部署会创建以下稳定的演示会话，便于评审直接验证权限差异：
+
+| 状态 | sessionId | 验证方式 |
+| --- | --- | --- |
+| 已支付会员 | `11111111-2222-4333-8444-555555555555` | `GET /api/quiz/results?sessionId=…` 返回完整 `projectionCurve` 与 `macroSplit`。 |
+| 未支付预览 | `99999999-8888-4777-8666-555555555555` | 同一结果接口返回上述字段为 `null`。 |
+
+### 可重放的 /pay 调用
+
+将 `BASE` 替换为实际 Vercel URL。下面命令先读取未支付数据、调用模拟支付、再读取完整数据。调用会改变该会话的状态；如需重复演示，请新建会话并按下方 API 流程保存和计算后再调用 `/pay`。
+
+```sh
+BASE="https://YOUR-DEPLOYMENT.vercel.app"
+SID="99999999-8888-4777-8666-555555555555"
+
+curl "$BASE/api/quiz/results?sessionId=$SID"
+curl -X POST "$BASE/api/pay" \
+  -H "Content-Type: application/json" \
+  -d "{\"sessionId\":\"$SID\",\"planType\":\"MONTHLY\"}"
+curl "$BASE/api/quiz/results?sessionId=$SID"
+```
 
 需要 Node.js >= 22.12、npm 和 PostgreSQL（本地或 Supabase）。
 
