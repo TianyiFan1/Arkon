@@ -16,7 +16,9 @@ export function MeasuredBackground() {
     const trackPointer = (event: globalThis.PointerEvent) => {
       const x = (event.clientX / window.innerWidth) * 100;
       const y = (event.clientY / window.innerHeight) * 100;
-      setSpotlight({ x, y, active: y >= 40 });
+      // The reveal follows the pointer across the whole interactive page.
+      // A vertical threshold made it disappear over the first-step choices.
+      setSpotlight({ x, y, active: true });
     };
     const clearSpotlight = () =>
       setSpotlight((current) => ({ ...current, active: false }));
