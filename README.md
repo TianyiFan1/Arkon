@@ -136,7 +136,9 @@ Windows 若已在标准目录安装 Chrome，测试会自动使用它，无需�
 
 尚未覆盖：真实支付网关（本题只模拟支付）、长期负载和跨地域故障、全浏览器兼容矩阵、像素截图回归。代码覆盖率来自运行报告，不硬编码通过率或百分比。
 
-## 数据模型
+## 数据库 Schema 图
+
+`UserSession` 是匿名用户会话表；`QuizResponse` 保存分步填写的身体数据；`HealthAssessment` 保存服务端计算后的健康评估；`Subscription` 保存模拟支付后的订阅状态。四张表均以 `sessionId` 关联，因此一次测评的进度、结果和会员权限可以一致恢复。
 
 ```mermaid
 erDiagram
