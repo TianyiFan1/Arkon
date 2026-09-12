@@ -1,0 +1,82 @@
+// Prisma schema file for Arkon Tech Health Quiz Funnel System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. 用户/会话表：追踪用户的测评会话生命周期与进度
+model UserSession {
+  id               String            @id @default(uuid())
+  currentStep      Int               @default(1)
+  isCompleted      Boolean           @default(false)
+  version          Int               @default(0)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  quizResponse     QuizResponse?
+  healthAssessment HealthAssessment?
+  subscription     Subscription?
+
+  @@index([createdAt])
+}
+
+// 2. 测评增量答题表：支持分步保存、乱序保存与状态恢复
+model QuizResponse {
+  id              String      @id @default(uuid())
+  sessionId       String      @unique
+  userSession     UserSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  gender          String?     // MALE | FEMALE | OTHER
+  age             Int?        // 14 - 120
+  primaryGoal     String?     // LOSE_WEIGHT | MAINTAIN | BUILD_MUSCLE
+  heightCm        Float?      // 50.0 - 260.0 cm
+  currentWeightKg Float?      // 20.0 - 350.0 kg
+  targetWeightKg  Float?      // 20.0 - 350.0 kg
+  activityLevel   String?     // SEDENTARY | LIGHT | MODERATE | VERY_ACTIVE
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+// 3. 健康评估计算结果表：持久化存储核心算法指标与预测数据
+model HealthAssessment {
+  id                         String      @id @default(uuid())
+  sessionId                  String      @unique
+  userSession                UserSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  bmi                        Float       // 身体质量指数
+  bmiCategory                String      // UNDERWEIGHT | NORMAL | OVERWEIGHT | OBESE
+  bmr                        Float       // 基础代谢率 (kcal)
+  tdee                       Float       // 每日能量总消耗 (kcal)
+  recommendedDailyCalories   Int         // 每日推荐目标热量 (kcal)
+  calorieDeficit             Float       // 实际每日热量差 (kcal)
+  projectedDays              Int         // 预估达成目标所需天数
+  projectedTargetDate        DateTime    // 预估目标达成日期
+
+  // 高阶权益字段（会员专享，非会员接口级别脱敏）
+  projectionCurveJson        String      // JSON: Array<{ week: number, date: string, projectedWeightKg: number }>
+  macroSplitJson             String      // JSON: { proteinGrams: number, carbsGrams: number, fatGrams: number }
+
+  calculatedAt               DateTime    @default(now())
+}
+
+// 4. 模拟订阅与支付状态表：闭环鉴权与权限控制
+model Subscription {
+  id            String      @id @default(uuid())
+  sessionId     String      @unique
+  userSession   UserSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  status        String      @default("INACTIVE") // INACTIVE | ACTIVE
+  planType      String      @default("MONTHLY")  // MONTHLY | QUARTERLY | ANNUAL
+  paidAt        DateTime?
+  transactionId String?
+  amount        Decimal     @default(29.99) @db.Decimal(8, 2)
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}

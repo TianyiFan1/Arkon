@@ -1,0 +1,50 @@
+{
+  "name": "arkon-quiz-funnel",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "node scripts/run-tests.mjs",
+    "test:coverage": "node scripts/run-tests.mjs --coverage",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate",
+    "db:seed": "tsx scripts/seed.ts",
+    "test:unit": "node scripts/run-tests.mjs --unit",
+    "test:browser": "node scripts/run-tests.mjs --browser",
+    "db:migrate": "prisma migrate deploy",
+    "typecheck": "tsc --noEmit --incremental false",
+    "dev:local": "node scripts/local-dev.mjs"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3",
+    "lucide-react": "^1.43.0",
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "^4.6.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22.20.2",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^5.0.0",
+    "embedded-postgres": "^18.4.0-beta.17",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.4",
+    "pg": "^8.23.0",
+    "prisma": "6.19.3",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.13",
+    "typescript": "^5",
+    "vitest": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

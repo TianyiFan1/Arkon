@@ -1,0 +1,39 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+
+# testing
+/coverage
+/.next-test/
+/test-results/
+/playwright-report/
+/.local/
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# sqlite db
+*.db
+*.db-journal
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
