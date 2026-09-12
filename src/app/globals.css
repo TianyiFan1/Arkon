@@ -1441,6 +1441,7 @@ body {
 .main-content {
   max-width: 1000px;
   padding: 54px 32px 88px;
+  overflow-x: clip;
 }
 .assessment-stage {
   position: relative;
