@@ -1,3 +1,5 @@
+[![Quality checks](https://github.com/TianyiFan1/Arkon/actions/workflows/ci.yml/badge.svg)](https://github.com/TianyiFan1/Arkon/actions/workflows/ci.yml)
+
 # 睿迄科技健康测评挑战
 
 Next.js 16 App Router + TypeScript + Prisma 6 + PostgreSQL + Vitest + Playwright。
