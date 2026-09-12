@@ -1,5 +1,7 @@
 @import "tailwindcss";
 :root {
+  --font-outfit: "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  --font-noto: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
   color-scheme: light dark;
   --bg: #f3f1f8;
   --fg: #342646;
