@@ -1,0 +1,1456 @@
+【软件认证】网元信息同步 3
+import java.util.List;
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    List<CurTable> SyncNeInfo(List<CurTable> curTable, List<BakTable> bakTable) {
+       Map<Integer, CurTable> map = new HashMap<>();
+       for (CurTable cur : curTable) {
+            map.put(cur.neId,cur);
+        }
+        
+        for(BakTable bak : bakTable){
+            CurTable cur = map.get(bak.neId);
+            if(cur == null){
+                CurTable add = new CurTable();
+                add.neId = bak.neId;
+                add.neName = bak.neName;
+                add.neFlag = 0;
+                map.put(bak.neId,add);
+            }else{
+                cur.neName = bak.neName;
+            }
+            }
+        List<CurTable>result = new ArrayList<>(map.values());
+        result.sort(Comparator.comparingInt(c -> c.neId));
+        return result;
+        }
+    }
+
+class BakTable {
+    int neId;
+    String neName;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[%d, \"%s\"]", neId, neName);
+    }
+}
+
+class CurTable {
+    int neId;
+    String neName;
+    int neFlag;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[%d, \"%s\", %d]", neId, neName, neFlag);
+    }
+}
+
+
+【软件认证】呼叫转移 2！！！！
+import java.util.List;
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    String callForwarding(String status, List<RegInfo> registers) {
+        Map<Integer, String> map = new HashMap<>();
+        for (RegInfo r : registers) {
+            map.put(r.type, r.phoneNumber);
+        }
+
+        if (map.containsKey(0)) {
+            return map.get(0);
+        }
+
+        int t = -1;
+        if (status.equals("busy")) {
+            t = 1;
+        } else if (status.equals("no-response")) {
+            t = 2;
+        } else if (status.equals("unreachable")) {
+            t = 3;
+        }
+        if (t != -1 && map.containsKey(t)) {
+            return map.get(t);
+        }
+
+        if (!status.equals("idle") && map.containsKey(4)) {
+            return map.get(4);
+        }
+
+        return status.equals("idle") ? "success" : "failure";
+    }
+}
+class RegInfo {
+    int type;
+    String phoneNumber;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[%d, \"%s\"]", type, phoneNumber);
+    }
+}
+
+
+【软件认证】公共字符 3
+import java.util.List;
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    char[] commonChars(int count, List<String> strings) {
+        int [] minCount = new int[128];
+        Arrays.fill(minCount, Integer.MAX_VALUE);
+        
+        for(String s : strings){
+            int[] freq = new int[128];
+            for(char c: s.toCharArray()){
+                freq[c]++;
+
+            }
+            for(int c = 0; c < 128; c++){
+                minCount[c] = Math.min(minCount[c], freq[c]);
+                
+            }
+        }
+        
+       int size = 0;
+        for (int c = 0; c < 128; c++) {
+            if (minCount[c] >= count) size++;
+        }
+
+        char[] res = new char[size];
+        int idx = 0;
+        for (int c = 0; c < 128; c++) {
+            if (minCount[c] >= count) {
+                res[idx++] = (char) c;
+            }
+        }
+        return res;
+    }
+}
+
+【软件认证】给定差值的组合 3
+import java.util.*;
+
+class Solution {
+    int getDiffCnt(int diff, int[] numbers) {
+        if (diff == 0) {
+            return 0;
+        }
+        Set<Integer> set = new HashSet<>();
+        for (int x : numbers) {
+            set.add(x);
+        }
+
+        int cnt = 0;
+        for (int a : numbers) {
+            if (set.contains(a - diff)) {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+}
+
+【软件认证】单板告警统计 2！！！！
+class Solution {
+    List<String> getAllFault(List<String> arrayA, List<String> arrayB) {
+        TreeSet<String> set = new TreeSet<>();
+        set.addAll(arrayA);
+        set.addAll(arrayB);
+        return new ArrayList<>(set);
+    }
+}
+
+【软件认证】电话拦截 4
+import java.util.List;
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    List<MyRecord> getPhoneRecords(List<Operation> operations) {
+        Set<String> exact = new HashSet<>();
+        List<String> prefixes = new ArrayList<>();
+        Map<String, MyRecord> map = new LinkedHashMap<>();  
+
+        for (Operation op : operations) {
+            if (op.opType == 'W') {
+                if (op.number.endsWith("*")) {
+                    prefixes.add(op.number.substring(0, op.number.length() - 1));
+                } else {
+                    exact.add(op.number);
+                }
+            } else {  // 'C'
+                boolean allow = exact.contains(op.number);
+                if (!allow) {
+                    for (String p : prefixes) {
+                        if (op.number.startsWith(p)) {
+                            allow = true;
+                            break;
+                        }
+                    }
+                }
+                MyRecord r = map.get(op.number);
+                if (r == null) {
+                    r = new MyRecord();
+                    r.number = op.number;
+                    map.put(op.number, r);
+                }
+                if (allow) {
+                    r.accepted++;
+                } else {
+                    r.refused++;
+                }
+            }
+        }
+
+        return new ArrayList<>(map.values());
+    }
+}
+class Operation {
+    char opType;
+    String number;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[%c, \"%s\"]", opType, number);
+    }
+}
+
+class MyRecord {
+    String number;
+    int accepted;
+    int refused;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[\"%s\", %d, %d]", number, accepted, refused);
+    }
+}
+
+【软件认证】矩阵列的最大值中的最小值 2！！！！！
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    int getTheMinWithColMaxs(int[][] matrix) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int result = Integer.MAX_VALUE;
+
+        for (int j = 0; j < m; j++) {
+            int colMax = matrix[0][j];
+            for (int i = 1; i < n; i++) {
+                if (matrix[i][j] > colMax) {
+                    colMax = matrix[i][j];
+                }
+            }
+            result = Math.min(result, colMax);
+        }
+        return result;
+    }
+}
+
+【软件认证】字符排序 2！！！！！
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    String characterSort(String inputStr) {
+        List<Character> digits = new ArrayList<>();
+        List<Character> letters = new ArrayList<>();
+
+        for (char c : inputStr.toCharArray()) {
+            if (Character.isDigit(c)) {
+                digits.add(c);
+            } else {
+                letters.add(c);
+            }
+        }
+
+        Collections.sort(digits);
+        letters.sort(Comparator.comparingInt(c ->
+                Character.isLowerCase(c) ? (c - 'a') : (c - 'A' + 26)));
+
+        StringBuilder sb = new StringBuilder();
+        int di = 0, li = 0;
+        for (char c : inputStr.toCharArray()) {
+            if (Character.isDigit(c)) {
+                sb.append(digits.get(di++));
+            } else {
+                sb.append(letters.get(li++));
+            }
+        }
+        return sb.toString();
+    }
+}
+
+【软件认证】话单发送 2！！！！！
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出引入 fastjson(1.2.83)，24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+import java.util.*;
+
+class Solution {
+    int getMaxSendNumber(int cap, int[] bills, int[] priorities) {
+        Map<Integer, List<Integer>> map = new TreeMap<>();
+        for (int i = 0; i < bills.length; i++) {
+            map.computeIfAbsent(priorities[i], k -> new ArrayList<>()).add(bills[i]);
+        }
+
+        int count = 0;
+        for (List<Integer> list : map.values()) {
+            Collections.sort(list);
+            int sum = 0;
+            for (int x : list) {
+                sum += x;
+            }
+
+            if (sum <= cap) {
+                cap -= sum;
+                count += list.size();
+            } else {
+                for (int x : list) {
+                    if (x <= cap) {
+                        cap -= x;
+                        count++;
+                    } else {
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        return count;
+    }
+}
+
+【软件认证】信号解码 4
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    int calculate(String message) {
+        String[] parts = message.split("\\$");  
+        long result = 0;
+        boolean first = true;
+
+        for (String part : parts) {
+            long seg = evalAt(part);
+            if (first) {
+                result = seg;
+                first = false;
+            } else {
+                result = 3 * result + 2 * seg + 1;  
+            }
+        }
+        return (int) result;
+    }
+
+    private long evalAt(String part) {
+        String[] nums = part.split("@");
+        long acc = Long.parseLong(nums[0]);
+        for (int i = 1; i < nums.length; i++) {
+            long y = Long.parseLong(nums[i]);
+            acc = 2 * acc + y + 3;          
+        }
+        return acc;
+    }
+}
+
+【软件认证】内存空间长度 2！！！！！
+import java.util.List;
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    int getTotalMemLen4Init(List<RangeOfMem> cmdsOfMemInit) {
+        cmdsOfMemInit.sort(Comparator.comparingInt(r -> r.start));
+
+        long total = 0;
+        long curStart = cmdsOfMemInit.get(0).start;
+        long curEnd = cmdsOfMemInit.get(0).end;
+
+        for (int i = 1; i < cmdsOfMemInit.size(); i++) {
+            long s = cmdsOfMemInit.get(i).start;
+            long e = cmdsOfMemInit.get(i).end;
+
+            if (s <= curEnd) {
+                curEnd = Math.max(curEnd, e);
+            } else {
+                total += curEnd - curStart;
+                curStart = s;
+                curEnd = e;
+            }
+        }
+        total += curEnd - curStart;
+        return (int) total;
+    }
+}
+class RangeOfMem {
+    int start;
+    int end;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[%d, %d]", start, end);
+    }
+}
+
+【软件认证】遥控小车 2！！！！！
+class Solution {
+    CoordPos runRemoteCtrlCar(String cmds) {
+        int[] dx = {0, -1, 0, 1};  
+        int[] dy = {1, 0, -1, 0};
+        int dir = 0;                
+        int x = 0, y = 0;
+
+        for (char c : cmds.toCharArray()) {
+            if (c == 'G') {
+                x += dx[dir];
+                y += dy[dir];
+            } else if (c == 'L') {
+                dir = (dir + 1) % 4;
+            } else {  // 'R'
+                dir = (dir + 3) % 4;
+            }
+        }
+
+        CoordPos pos = new CoordPos();
+        pos.coordX = x;
+        pos.coordY = y;
+        return pos;
+    }
+}
+class CoordPos {
+    int coordX;
+    int coordY;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[%d, %d]", coordX, coordY);
+    }
+}
+
+【软件认证】重组乱序的数据分段 3 
+import java.util.List;
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    String recombine(List<DataFragment> dataFragments, int dstType) {
+        Map<Integer, String> contentMap = new HashMap<>();   
+        Map<Integer, Integer> endMap = new HashMap<>();     
+
+        for (DataFragment f : dataFragments) {
+            if (f.dataType != dstType) {
+                continue;
+            }
+            contentMap.putIfAbsent(f.index, f.data);
+            endMap.put(f.index, f.endFlag);
+        }
+
+        if (contentMap.isEmpty()) {
+            return "NA";
+        }
+
+        int maxSeq = Collections.max(contentMap.keySet());
+
+        if (contentMap.size() != maxSeq + 1) {
+            return "NA";
+        }
+        if (endMap.get(maxSeq) != 1) {
+            return "NA";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i <= maxSeq; i++) {
+            sb.append(contentMap.get(i));
+        }
+        return sb.toString();
+    }
+}
+
+class DataFragment {
+    int dataType;
+    int index;
+    int endFlag;
+    int len;
+    String data;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[%d, %d, %d, %d, \"%s\"]", dataType, index, endFlag, len, data);
+    }
+}
+
+【软件认证】字符编码 4
+class Solution {
+    String xutfEncoding(int unicodeVal) {
+        long val = unicodeVal;
+        int n;
+        if (val < (1L << 7)) {
+            n = 1;
+        } else if (val < (1L << 11)) {
+            n = 2;
+        } else if (val < (1L << 16)) {
+            n = 3;
+        } else if (val < (1L << 21)) {
+            n = 4;
+        } else if (val < (1L << 26)) {
+            n = 5;
+        } else {
+            n = 6;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        if (n == 1) {
+            int b = 0x80 | (int) val;
+            sb.append(String.format(java.util.Locale.ROOT, "%02X", b));
+        } else {
+            int firstBits = 7 - n;
+            int shift = 6 * (n - 1);
+            int first = (1 << firstBits) | (int) ((val >> shift) & ((1L << firstBits) - 1));
+            sb.append(String.format(java.util.Locale.ROOT, "%02X", first));
+
+            for (int k = n - 2; k >= 0; k--) {
+                int chunk = (int) ((val >> (6 * k)) & 0x3F);
+                sb.append(String.format(java.util.Locale.ROOT, "%02X", 0x40 | chunk));
+            }
+        }
+
+        return sb.toString();
+    }
+}
+
+【软件认证】简易校验和算法 3
+class Solution {
+    String simpleCheckSum(String inputStr) {
+       int len = inputStr.length() / 2;
+        int totalBytes = ((len + 3) / 4) * 4;
+        int checksum = 0;
+
+        for (int i = 0; i < totalBytes; i += 4) {
+            int word = 0;
+            for (int j = 0; j < 4; j++) {
+                int idx = i + j;.
+3+
+                int b = (idx < len)
+                        ? Integer.parseInt(inputStr.substring(idx * 2, idx * 2 + 2), 16)
+                        : 0xFF;
+                word = (word << 8) | b;
+            }
+            checksum = (i == 0) ? word : (checksum ^ word);
+        }
+
+        return String.format(java.util.Locale.ROOT, "%08X", checksum);
+    }
+}
+
+【软件认证】编码格式校验 4
+class Solution {
+    int decodeChar(String encodedString) {
+        int totalBytes = encodedString.length() / 2;
+        int[] bytes = new int[totalBytes];
+        for (int i = 0; i < totalBytes; i++) {
+            bytes[i] = Integer.parseInt(encodedString.substring(i * 2, i * 2 + 2), 16);
+        }
+
+        int first = bytes[0];
+
+        if ((first & 0x80) == 0) {
+            if (totalBytes != 1) {
+                return -1;
+            }
+            return first & 0x7F;
+        }
+
+        int n = 0;
+        int t = first;
+        while ((t & 0x80) != 0) {
+            n++;
+            t = (t << 1) & 0xFF;
+        }
+
+        if (n < 2 || n > 6) {
+            return -1;
+        }
+        if (totalBytes != n) {
+            return -1;
+        }
+
+        int mask = (1 << (7 - n)) - 1;
+        long val = first & mask;
+        for (int i = 1; i < n; i++) {
+            if ((bytes[i] & 0xC0) != 0x80) {
+                return -1;
+            }
+            val = (val << 6) | (bytes[i] & 0x3F);
+        }
+        return (int) val;
+    }
+}
+
+【软件认证】路由表最长匹配 4
+import java.util.List;
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    String routerSearch(String dstIp, List<String> ipTable) {
+        long dst = ipToLong(dstIp);
+
+        long bestM = -1;
+        String best = "empty";
+
+        for (String route : ipTable) {
+            String[] parts = route.split("/");
+            long entryIp = ipToLong(parts[0]);
+            int m = Integer.parseInt(parts[1]);
+
+            long mask = (m == 0) ? 0L : (0xFFFFFFFFL << (32 - m));
+            if ((dst & mask) == (entryIp & mask)) {
+                if (m > bestM) {
+                    bestM = m;
+                    best = route;
+                }
+            }
+        }
+        return best;
+    }
+
+    private long ipToLong(String ip) {
+        String[] p = ip.split("\\.");
+        long res = 0;
+        for (String s : p) {
+            res = (res << 8) | Integer.parseInt(s);
+        }
+        return res;
+    }
+}
+
+【软件认证】SQL解析执行 5 
+import java.util.*;
+import java.util.List;
+
+class MiniDb {
+    private Map<Integer, Table> tables = new HashMap<>();
+
+    MiniDb() {
+    }
+
+    void create(int tableId, int colNum, String keys) {
+        if (tables.containsKey(tableId)) {
+            return;
+        }
+        Table t = new Table();
+        t.colNum = colNum;
+        t.keyIdx = new int[keys.length()];
+        for (int i = 0; i < keys.length(); i++) {
+            t.keyIdx[i] = keys.charAt(i) - 'a';
+        }
+        tables.put(tableId, t);
+    }
+
+    void insert(int tableId, int[] values) {
+        Table t = tables.get(tableId);
+        String key = buildKey(t, values);
+        if (t.rows.containsKey(key)) {
+            return;
+        }
+        t.rows.put(key, values.clone());
+    }
+
+    int[][] select(int tableId, List<String> conditions) {
+        Table t = tables.get(tableId);
+        List<int[]> matched = new ArrayList<>();
+
+        outer:
+        for (int[] row : t.rows.values()) {
+            for (String cond : conditions) {
+                int col = cond.charAt(0) - 'a';
+                int val = Integer.parseInt(cond.substring(cond.indexOf('=') + 1));
+                if (row[col] != val) {
+                    continue outer;
+                }
+            }
+            matched.add(row);
+        }
+
+        matched.sort((a, b) -> {
+            for (int idx : t.keyIdx) {
+                if (a[idx] != b[idx]) {
+                    return Integer.compare(a[idx], b[idx]);
+                }
+            }
+            return 0;
+        });
+
+        int[][] res = new int[matched.size()][];
+        for (int i = 0; i < matched.size(); i++) {
+            res[i] = matched.get(i);
+        }
+        return res;
+    }
+
+    private String buildKey(Table t, int[] values) {
+        StringBuilder sb = new StringBuilder();
+        for (int idx : t.keyIdx) {
+            sb.append(values[idx]).append(',');
+        }
+        return sb.toString();
+    }
+
+    static class Table {
+        int colNum;
+        int[] keyIdx;
+        Map<String, int[]> rows = new HashMap<>();
+    }
+}
+
+【软件认证】简易DHCP服务器 4
+import java.util.*;
+
+class DHCPServerSys {
+    private Map<String, Integer> assigned = new HashMap<>();   
+    private Map<String, Integer> lastIp = new HashMap<>();  
+    private boolean[] everUsed = new boolean[256];            
+    private boolean[] inUse = new boolean[256];               
+
+    DHCPServerSys() {
+    }
+
+    String request(String mac) {
+
+        if (assigned.containsKey(mac)) {
+            return ipToString(assigned.get(mac));
+        }
+
+        if (lastIp.containsKey(mac)) {
+            int last = lastIp.get(mac);
+            if (!inUse[last]) {
+                allocate(mac, last);
+                return ipToString(last);
+            }
+        }
+
+        for (int i = 0; i < 256; i++) {
+            if (!everUsed[i]) {
+                allocate(mac, i);
+                return ipToString(i);
+            }
+        }
+    
+        for (int i = 0; i < 256; i++) {
+            if (everUsed[i] && !inUse[i]) {
+                allocate(mac, i);
+                return ipToString(i);
+            }
+        }
+        return "NA";
+    }
+
+    boolean release(String mac) {
+        Integer ip = assigned.remove(mac);
+        if (ip == null) {
+            return false;
+        }
+        inUse[ip] = false;          
+        return true;
+    }
+
+    private void allocate(String mac, int ip) {
+        everUsed[ip] = true;
+        inUse[ip] = true;
+        assigned.put(mac, ip);
+        lastIp.put(mac, ip);
+    }
+
+    private String ipToString(int ip) {
+        return "192.168.0." + ip;
+    }
+}
+
+【软件认证】简易内存池 4
+import java.util.*;
+
+class MemSystem {
+    private final int totalSpace;
+    private final TreeMap<Integer, Integer> blocks = new TreeMap<>();
+
+    MemSystem(int space) {
+        this.totalSpace = space;
+    }
+
+    int request(int size) {
+        if (size == 0) {
+            return -1;
+        }
+
+        int prev = 0;
+        for (Map.Entry<Integer, Integer> e : blocks.entrySet()) {
+            int addr = e.getKey();
+            int gap = addr - prev;
+            if (gap >= size) {
+                blocks.put(prev, size);    
+                return prev;
+            }
+            prev = addr + e.getValue();
+        }
+
+        if (totalSpace - prev >= size) {
+            blocks.put(prev, size);
+            return prev;
+        }
+        return -1;
+    }
+
+    boolean release(int addr) {
+        if (blocks.containsKey(addr)) {
+            blocks.remove(addr);
+            return true;
+        }
+        return false;
+    }
+}
+
+【软件认证】基站信号地图 4
+import java.util.List; 
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    int sumSignalStrength(int rows, int cols, int[][] baseStations, List<Operation> oprations) {
+        boolean[][] station = new boolean[rows + 2][cols + 2];
+
+        for (int[] b : baseStations) {
+            station[b[0]][b[1]] = true;
+        }
+
+        for (Operation op : oprations) {
+            if (op.opCode.equals("add")) {
+                station[op.row][op.col] = true;
+            } else {
+                for (int dr = -1; dr <= 1; dr++) {
+                    for (int dc = -1; dc <= 1; dc++) {
+                        station[op.row + dr][op.col + dc] = false;
+                    }
+                }
+            }
+        }
+
+        int[][] strength = new int[rows + 2][cols + 2];
+        for (int r = 1; r <= rows; r++) {
+            for (int c = 1; c <= cols; c++) {
+                if (station[r][c]) {
+                    for (int dr = -1; dr <= 1; dr++) {
+                        for (int dc = -1; dc <= 1; dc++) {
+                            if (dr == 0 && dc == 0) {
+                                continue;
+                            }
+                            strength[r + dr][c + dc]++;
+                        }
+                    }
+                }
+            }
+        }
+
+        int sum = 0;
+        for (int r = 1; r <= rows; r++) {
+            for (int c = 1; c <= cols; c++) {
+                if (!station[r][c]) {
+                    sum += strength[r][c];
+                }
+            }
+        }
+        return sum;
+    }
+}
+class Operation {
+    String opCode;
+    int row;
+    int col;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[\"%s\", %d, %d]", opCode, row, col);
+    }
+}
+
+【软件认证】表达式计算 4
+class Solution {
+    int calc(String expression) {
+        String[] tokens = expression.split(",");
+        long[] stack = new long[tokens.length];
+        int top = 0;
+
+        for (String token : tokens) {
+            if (token.length() == 1 && isOperator(token.charAt(0))) {
+                long b = stack[--top];
+                long a = stack[--top];
+                long res;
+                switch (token.charAt(0)) {
+                    case '+': res = a + b; break;
+                    case '-': res = a - b; break;
+                    case '*': res = a * b; break;
+                    default:  res = a / b; break;
+                }
+                stack[top++] = res;
+            } else {
+                stack[top++] = Long.parseLong(token);
+            }
+        }
+        return (int) stack[0];
+    }
+
+    private boolean isOperator(char c) {
+        return c == '+' || c == '-' || c == '*' || c == '/';
+    }
+}
+
+【软件认证】业务负载分配 4
+class Solution {
+    int getMinLoad(int serverNum, int[] tasks) {
+        long lo = 1;
+        long hi = 0;
+        for (int t : tasks) {
+            hi = Math.max(hi, t);
+        }
+
+        while (lo < hi) {
+            long mid = (lo + hi) / 2;
+            if (feasible(mid, serverNum, tasks)) {
+                hi = mid;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return (int) lo;
+    }
+
+    private boolean feasible(long load, int serverNum, int[] tasks) {
+        long need = 0;
+        for (int t : tasks) {
+            need += (t + load - 1) / load;
+            if (need > serverNum) {
+                return false;
+            }
+        }
+        return need <= serverNum;
+    }
+}
+
+【软件认证】最佳升级时间窗 5
+class Solution {
+    Window getBestWindow(int cap, int[] visitCnt) {
+        int n = visitCnt.length;
+        long limit = cap;
+        long sum = 0;
+        int left = 0;
+
+        int bestLen = 0;
+        int bestStart = -1;
+
+        for (int right = 0; right < 2 * n; right++) {
+            sum += visitCnt[right % n];
+
+            while (left <= right && (sum > limit || right - left + 1 > n)) {
+                sum -= visitCnt[left % n];
+                left++;
+            }
+
+            int len = right - left + 1;
+            if (len > 0 && left < n && len > bestLen) {
+                bestLen = len;
+                bestStart = left;
+            }
+        }
+
+        Window w = new Window();
+        if (bestLen == 0) {
+            w.start = -1;
+            w.end = -1;
+        } else {
+            w.start = bestStart;
+            w.end = (bestStart + bestLen - 1) % n;   
+        }
+        return w;
+    }
+}
+
+class Window {
+    int start;
+    int end;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[%d, %d]", start, end);
+    }
+}
+
+【软件认证】手机九宫格输入法 5
+class Solution {
+    String displayByKeydowns(String inputStr) {
+        String[] map = {null, ",.", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        boolean english = false;
+        StringBuilder sb = new StringBuilder();
+
+        int pendingKey = -1;
+        int pressCount = 0;
+
+        for (char c : inputStr.toCharArray()) {
+            if (c == '#') {
+                if (pendingKey != -1) {
+                    appendPending(sb, map, pendingKey, pressCount);
+                    pendingKey = -1;
+                    pressCount = 0;
+                }
+                english = !english;
+            } else if (c == '!') {
+                if (pendingKey != -1) {
+                    appendPending(sb, map, pendingKey, pressCount);
+                    pendingKey = -1;
+                    pressCount = 0;
+                }
+            } else {
+                int d = c - '0';
+                if (!english) {
+                    sb.append(c);
+                } else {
+                    if (d == 0) {
+                        if (pendingKey != -1) {
+                            appendPending(sb, map, pendingKey, pressCount);
+                            pendingKey = -1;
+                            pressCount = 0;
+                        }
+                        sb.append(' ');
+                    } else {
+                        if (pendingKey == d) {
+                            pressCount++;
+                        } else {
+                            if (pendingKey != -1) {
+                                appendPending(sb, map, pendingKey, pressCount);
+                            }
+                            pendingKey = d;
+                            pressCount = 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (pendingKey != -1) {
+            appendPending(sb, map, pendingKey, pressCount);
+        }
+        return sb.toString();
+    }
+
+    private void appendPending(StringBuilder sb, String[] map, int key, int count) {
+        String chars = map[key];
+        sb.append(chars.charAt((count - 1) % chars.length()));
+    }
+}
+
+【软件认证】单词统计
+import java.util.List;
+import java.util.*;
+/**
+ * 使用完整框架代码至少需满足jdk基线要求（jdk 11）, 推荐和平台jdk版本（jdk 17）保持一致；
+ * 框架解析输入输出引入 fastjson(1.2.83)，24年7月起正式在认证中使用（模拟自测场景已使用）。
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    int getWordsCnt(List<String> lines) {
+        List<String> segments = new ArrayList<>();
+        int n = lines.size();
+        int i = 0;
+
+        while (i < n) {
+            StringBuilder buf = new StringBuilder(lines.get(i));
+
+            while (buf.length() > 0
+                    && buf.charAt(buf.length() - 1) == '-'
+                    && i + 1 < n) {
+                buf.deleteCharAt(buf.length() - 1);
+                i++;
+                String next = lines.get(i);
+                int p = 0;
+                while (p < next.length() && next.charAt(p) == ' ') {
+                    p++;
+                }
+                buf.append(next.substring(p));
+            }
+
+            segments.add(buf.toString());
+            i++;
+        }
+
+        int total = 0;
+        for (String seg : segments) {
+            total += countInSegment(seg);
+        }
+        return total;
+    }
+
+    private int countInSegment(String s) {
+        int cnt = 0;
+        boolean inWord = false;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c >= 'a' && c <= 'z') {
+                if (!inWord) {
+                    cnt++;
+                    inWord = true;
+                }
+            } else {
+                inWord = false;
+            }
+        }
+        return cnt;
+    }
+}
+
+【软件认证】挑选礼物
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    int getUnselectedNum(int[] favorites, int[] presents) {
+        Deque<Integer> queue = new ArrayDeque<>();
+        for (int f : favorites) {
+            queue.addLast(f);
+        }
+
+        int p = 0;
+        int skipped = 0;
+
+        while (!queue.isEmpty() && p < presents.length) {
+            if (queue.peekFirst() == presents[p]) {
+                queue.pollFirst();
+                p++;
+                skipped = 0;
+            } else {
+                queue.addLast(queue.pollFirst());
+                skipped++;
+                if (skipped == queue.size()) {
+                    break;
+                }
+            }
+        }
+
+        return queue.size();
+    }
+}
+
+
+【软件认证】时长单位转换
+class Solution {
+    String UnitTransform(String inputStr) {
+        String[] parts = inputStr.trim().split("\\s+");
+        long value = Long.parseLong(parts[0]);
+        String unit = parts[1];
+
+        long totalSeconds = value * unitToSeconds(unit);
+
+        String[] units = {"year", "month", "day", "hour", "minute", "second"};
+        long[] secs = {58924800L, 2678400L, 86400L, 3600L, 60L, 1L};
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < units.length; i++) {
+            long cnt = totalSeconds / secs[i];
+            totalSeconds %= secs[i];
+            if (cnt > 0) {
+                if (sb.length() > 0) {
+                    sb.append(' ');
+                }
+                sb.append(cnt).append(' ').append(units[i]);
+            }
+        }
+        return sb.toString();
+    }
+
+    private long unitToSeconds(String unit) {
+        switch (unit) {
+            case "year":   return 58924800L;
+            case "month":  return 2678400L;
+            case "day":    return 86400L;
+            case "hour":   return 3600L;
+            case "minute": return 60L;
+            case "second": return 1L;
+            default:       return 1L;
+        }
+    }
+}
+
+【软件认证】磁盘空间统计
+class Solution {
+
+    int countIntervals(int[] records, int[] range, int threshold) {
+        int n = records.length;
+        int minLen = range[0];
+        int maxLen = range[1];
+
+        long[] prefix = new long[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + records[i];
+        }
+
+        int count = 0;
+        for (int L = minLen; L <= maxLen; L++) {
+            long need = (long) threshold * L;
+            for (int i = L; i <= n; i++) {
+                long sum = prefix[i] - prefix[i - L];
+                if (sum >= need) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+}
+
+【软件认证】收银台设计 4 
+import java.util.Arrays;
+import java.util.List;
+
+class Solution {
+    private static final int[] DENOM = {1, 5, 10, 50, 100};
+
+    int[] cashierResult(int[] initCashes, List<Payment> payments) {
+        long[] cash = new long[5];
+        for (int i = 0; i < 4; i++) {
+            cash[i] = initCashes[i];
+        }
+
+        for (Payment p : payments) {
+            long price = p.price;
+            long[] paid = new long[5];
+            long paidAmount = 0;
+            for (int i = 0; i < 5; i++) {
+                paid[i] = p.paidCashes[i];
+                paidAmount += paid[i] * DENOM[i];
+            }
+
+            if (paidAmount < price) {
+                continue;
+            }
+
+            long[] backup = cash.clone();
+            for (int i = 0; i < 5; i++) {
+                cash[i] += paid[i];
+            }
+
+            long change = paidAmount - price;
+            long[] used = new long[5];
+            long rem = change;
+            for (int i = 4; i >= 0; i--) {
+                long u = Math.min(cash[i], rem / DENOM[i]);
+                used[i] = u;
+                rem -= u * DENOM[i];
+            }
+
+            if (rem != 0) {
+                cash = backup;
+            } else {
+                for (int i = 0; i < 5; i++) {
+                    cash[i] -= used[i];
+                }
+            }
+        }
+
+        int[] res = new int[5];
+        for (int i = 0; i < 5; i++) {
+            res[i] = (int) cash[i];
+        }
+        return res;
+    }
+}
+
+class Payment {
+    int price;
+    int[] paidCashes;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[%d, %s]", price, Arrays.toString(paidCashes));
+    }
+}
+ 
+【软件认证】应用进程统计 4
+import java.util.List;
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 命题组
+ * @since 2023-1-1
+ */
+class Solution {
+    List<String> getTop3App(List<Process> processes, List<String> sortRules, List<String> selectedUsers) {
+        Set<String> users = new HashSet<>(selectedUsers);
+        Map<String, int[]> agg = new HashMap<>();   // appName -> [cpuUsed, memUsed]
+
+        for (Process p : processes) {
+            if (!users.contains(p.userName)) {
+                continue;
+            }
+            int[] a = agg.computeIfAbsent(p.appName, k -> new int[2]);
+            a[0] += p.cpuUsed;
+            a[1] += p.memUsed;
+        }
+
+        List<String> names = new ArrayList<>(agg.keySet());
+        names.sort((x, y) -> {
+            int[] a = agg.get(x);
+            int[] b = agg.get(y);
+            for (String rule : sortRules) {
+                int va = rule.equals("cpuUsed") ? a[0] : a[1];
+                int vb = rule.equals("cpuUsed") ? b[0] : b[1];
+                if (va != vb) {
+                    return Integer.compare(vb, va);
+                }
+            }
+            return x.compareTo(y);
+        });
+
+        int k = Math.min(3, names.size());
+        return new ArrayList<>(names.subList(0, k));
+    }
+}
+
+class Process {
+    String appName;
+    String userName;
+    int cpuUsed;
+    int memUsed;
+    public String toString() {
+        return String.format(java.util.Locale.ROOT, "[\"%s\", \"%s\", %d, %d]", appName, userName, cpuUsed, memUsed);
+    }
+}
+
+【软件认证】比特翻转 4
+class Solution {
+    int findMaxConsecutiveBits(int target, int[] bits) {
+        int left = 0;
+        int nonTarget = 0;
+        int ans = 0;
+
+        for (int right = 0; right < bits.length; right++) {
+            if (bits[right] != target) {
+                nonTarget++;
+            }
+            while (nonTarget > 1) {
+                if (bits[left] != target) {
+                    nonTarget--;
+                }
+                left++;
+            }
+            ans = Math.max(ans, right - left + 1);
+        }
+        return ans;
+    }
+}
+
+【软件认证】浏览历史
+import java.util.*;
+/**
+ * 使用完整框架代码推荐使用jdk 17（和平台版本保持一致）；
+ * 框架解析输入输出已引入 fastjson(1.2.83)；24年Q3起正式认证中使用（模拟自测场景已于23Q4使用）
+ *
+ * @author 出题组
+ * @since 2023-04-01
+ */
+class BrowserHistorySys {
+    private final List<String> history = new ArrayList<>();
+    private final int maxCount;
+    private int idx;
+
+    BrowserHistorySys(String homepage, int maxCount) {
+        this.maxCount = maxCount;
+        history.add(homepage);
+        this.idx = 0;
+    }
+
+    int visit(String url) {
+        if (history.get(idx).equals(url)) {
+            return history.size();
+        }
+     
+        while (history.size() - 1 > idx) {
+            history.remove(history.size() - 1);
+        }
+        history.add(url);
+
+        if (history.size() > maxCount) {
+            history.remove(0);
+        }
+        idx = history.size() - 1;
+        return history.size();
+    }
+
+    String back() {
+        if (idx > 0) {
+            idx--;
+        }
+        return history.get(idx);
+    }
+
+    String forward() {
+        if (idx < history.size() - 1) {
+            idx++;
+        }
+        return history.get(idx);
+    }
+}
