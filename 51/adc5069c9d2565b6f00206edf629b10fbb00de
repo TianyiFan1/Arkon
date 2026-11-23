@@ -1,0 +1,19 @@
+科目一刷题代码.txt
+  s_9a936109fe13f7::t_5995bf464e76f3 1-1456
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "10.11.1",
+  "base_commit_sha": "51adc5069c9d2565b6f00206edf629b10fbb00de",
+  "prompts": {},
+  "sessions": {
+    "s_9a936109fe13f7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e13b136a5ffeansoSvDOeBj7n3",
+        "model": "unknown"
+      },
+      "human_author": "TianyiFan30 <fan.tiany@northeastern.edu>"
+    }
+  }
+}
