@@ -1,0 +1,19 @@
+软件认证题目整理.txt
+  s_9a936109fe13f7::t_5f59c0485baf9f 1-1807
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "10.11.1",
+  "base_commit_sha": "a2a6c9e61b6012bcdcef1834e8eb927b0db1f52a",
+  "prompts": {},
+  "sessions": {
+    "s_9a936109fe13f7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e13b136a5ffeansoSvDOeBj7n3",
+        "model": "unknown"
+      },
+      "human_author": "TianyiFan30 <fan.tiany@northeastern.edu>"
+    }
+  }
+}
