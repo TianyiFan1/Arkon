@@ -1,0 +1,19 @@
+科目一刷题简单.txt
+  s_452b55edb6935b::t_124ac093a9a379 1-1066
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "10.11.1",
+  "base_commit_sha": "0e42512718d00071ccfdd01329bee38ca287a03e",
+  "prompts": {},
+  "sessions": {
+    "s_452b55edb6935b": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_df44c1d8affe564N0GRqSMJySX",
+        "model": "unknown"
+      },
+      "human_author": "TianyiFan30 <fan.tiany@northeastern.edu>"
+    }
+  }
+}
